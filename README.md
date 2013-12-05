@@ -1,4 +1,3 @@
-Repositorio donde se alojan los ejercicios a relizar en la asignatura de Android
-=========
+Introducido framework -> Android Annotations
 
-Las entregas serán etiquetadas con el tag "v[n.entrega].0"
+Añadidos DAOFactory, DAOs y POJOS
