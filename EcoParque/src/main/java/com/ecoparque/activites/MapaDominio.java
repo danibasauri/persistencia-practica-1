@@ -18,14 +18,13 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-
 public class MapaDominio extends Activity {
     private String browserUrl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.fragment_mapa_dominio);
+        setContentView(R.layout.mapa_dominio);
         final Intent intent = getIntent();
         final NetInfo netInfo = new NetInfo(MapaDominio.this);
 

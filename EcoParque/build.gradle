@@ -10,6 +10,16 @@ apply plugin: 'android'
 
 repositories {
     mavenCentral()
+
+    maven {
+        url 'https://oss.sonatype.org/content/repositories/snapshots/'
+    }
+}
+
+ext.androidAnnotationsVersion = '3.0-SNAPSHOT';
+
+configurations {
+    apt
 }
 
 android {
@@ -20,6 +30,17 @@ android {
         minSdkVersion 14
         targetSdkVersion 18
     }
+    buildTypes {
+        release {
+            runProguard true
+            proguardFile getDefaultProguardFile('proguard-android-optimize.txt')
+        }
+    }
+    productFlavors {
+        defaultFlavor {
+            proguardFile 'proguard-rules.txt'
+        }
+    }
 }
 
 dependencies {
@@ -27,5 +48,39 @@ dependencies {
     compile 'com.fasterxml.jackson.core:jackson-core:2.1.4'
     compile 'com.fasterxml.jackson.core:jackson-databind:2.1.4'
     compile 'com.android.support:appcompat-v7:+'
+    apt "org.androidannotations:androidannotations:${androidAnnotationsVersion}"
+    compile "org.androidannotations:androidannotations-api:${androidAnnotationsVersion}"
     compile 'com.google.android.gms:play-services:4.0.30'
 }
+
+def getSourceSetName(variant) {
+    return new File(variant.dirName).getName();
+}
+
+android.applicationVariants.all { variant ->
+    def aptOutputDir = project.file("build/source/apt")
+    def aptOutput = new File(aptOutputDir, variant.dirName)
+    println "****************************"
+    println "variant: ${variant.name}"
+    println "manifest:  ${variant.processResources.manifestFile}"
+    println "aptOutput:  ${aptOutput}"
+    println "****************************"
+
+    android.sourceSets[getSourceSetName(variant)].java.srcDirs += aptOutput.getPath()
+
+    variant.javaCompile.options.compilerArgs += [
+            '-processorpath', configurations.apt.getAsPath(),
+            '-processor', 'org.androidannotations.AndroidAnnotationProcessor',
+            '-AandroidManifestFile=' + variant.processResources.manifestFile,
+            '-s', aptOutput
+    ]
+
+    variant.javaCompile.source = variant.javaCompile.source.filter { p ->
+        return !p.getPath().startsWith(aptOutputDir.getPath())
+    }
+
+    variant.javaCompile.doFirst {
+        aptOutput.mkdirs()
+    }
+}
+

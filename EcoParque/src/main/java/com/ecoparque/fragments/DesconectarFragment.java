@@ -8,7 +8,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.ecoparque.R;
-import com.ecoparque.activites.LoginActivity;
+import com.ecoparque.activites.LoginActivity_;
 
 
 public class DesconectarFragment extends DialogFragment {
@@ -19,7 +19,7 @@ public class DesconectarFragment extends DialogFragment {
                 .setPositiveButton(R.string.si, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
 
-                        Intent intentDesconectar = new Intent(getActivity(), LoginActivity.class);
+                        Intent intentDesconectar = new Intent(getActivity(), LoginActivity_.class);
                         intentDesconectar.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         intentDesconectar.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         intentDesconectar.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

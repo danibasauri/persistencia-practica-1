@@ -18,9 +18,8 @@ import java.io.IOException;
 import java.net.URL;
 
 public class ParseWebTask extends AsyncTask<String, Integer, String> {
-    private final Activity activity;
+    private final Activity mActivity;
     private TextView ip, pais, localidad, coordenadas;
-    private static final String DEBUG_TAG = "HttpExample";
     private final ObjectMapper mapper = new ObjectMapper();
     private UrlInfo urlInfo;
     private ProgressDialog pDialog;
@@ -29,17 +28,15 @@ public class ParseWebTask extends AsyncTask<String, Integer, String> {
     private final String JSONurl = "http://freegeoip.net/json/";
 
     public ParseWebTask(Activity activity) {
-        this.activity = activity;
+        mActivity = activity;
     }
 
     @Override
     protected void onPreExecute() {
-        pDialog = new ProgressDialog(activity);
+        pDialog = new ProgressDialog(mActivity);
         pDialog.setCancelable(false);
         pDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         pDialog.setMessage("Procesando...");
-        pDialog.setMax(1);
-        pDialog.setProgress(0);
         pDialog.show();
     }
 
@@ -47,17 +44,10 @@ public class ParseWebTask extends AsyncTask<String, Integer, String> {
     protected String doInBackground(String... urls) {
         try {
             mUrl = urls[0];
-            publishProgress(0);
-            String finalUrl = JSONurl + mUrl;
-            urlInfo = mapper.readValue(new URL(finalUrl), UrlInfo.class);
-            publishProgress(1);
-        } catch (
-                IOException e
-                ) {
-
+            urlInfo = mapper.readValue(new URL(JSONurl + mUrl), UrlInfo.class);
+        } catch (IOException e) {
             e.printStackTrace();
             return "error";
-
         }
         return "ok";
     }
@@ -68,38 +58,37 @@ public class ParseWebTask extends AsyncTask<String, Integer, String> {
         if (result.equalsIgnoreCase("ok")) {
             try {
 
-                ip = (TextView) activity.findViewById(R.id.ip);
-                pais = (TextView) activity.findViewById(R.id.pais);
-                localidad = (TextView) activity.findViewById(R.id.localidad);
-                coordenadas = (TextView) activity.findViewById(R.id.coordenadas);
+                ip = (TextView) mActivity.findViewById(R.id.ip);
+                pais = (TextView) mActivity.findViewById(R.id.pais);
+                localidad = (TextView) mActivity.findViewById(R.id.localidad);
+                coordenadas = (TextView) mActivity.findViewById(R.id.coordenadas);
 
                 ip.setText(ip.getText().toString() + urlInfo.getIp());
                 pais.setText(pais.getText().toString() + urlInfo.getCountry_name() + " (" + urlInfo.getCountry_code() + ")");
                 localidad.setText(localidad.getText().toString() + urlInfo.getCity());
                 coordenadas.setText(coordenadas.getText().toString() + urlInfo.getLatitude() + ", " + urlInfo.getLongitude());
 
-                mostrarMapa = (Button) activity.findViewById(R.id.btn_mostrar_mapa);
+                mostrarMapa = (Button) mActivity.findViewById(R.id.btn_mostrar_mapa);
                 mostrarMapa.setEnabled(true);
                 mostrarMapa.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent intent = new Intent(activity, MapaDominio.class);
+                        Intent intent = new Intent(mActivity, MapaDominio.class);
                         intent.putExtra("lat", urlInfo.getLatitude());
                         intent.putExtra("lon", urlInfo.getLongitude());
                         intent.putExtra("ciudad", urlInfo.getCity());
                         intent.putExtra("url", mUrl);
-                        activity.startActivity(intent);
+                        mActivity.startActivity(intent);
                     }
                 });
                 pDialog.dismiss();
             } catch (NullPointerException e) {
-                Toast.makeText(activity, "Error al intentar obtener los datos de la web", 1000).show();
-                activity.finish();
+                Toast.makeText(mActivity, "Error al intentar obtener los datos de la web", 1000).show();
+                mActivity.finish();
             }
-
         } else {
-            Toast.makeText(activity, "Error al intentar obtener los datos de la web", 1000).show();
-            activity.finish();
+            Toast.makeText(mActivity, "Error al intentar obtener los datos de la web", 1000).show();
+            mActivity.finish();
         }
     }
 

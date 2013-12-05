@@ -2,11 +2,14 @@ package com.ecoparque.objects;
 
 import android.app.Application;
 
+import org.androidannotations.annotations.EApplication;
+
 import java.util.ArrayList;
 
 /**
  * Created by dcandelas on 20/11/13.
  */
+@EApplication
 public class Constantes extends Application {
 
     public static String getPuntoLimpio() {

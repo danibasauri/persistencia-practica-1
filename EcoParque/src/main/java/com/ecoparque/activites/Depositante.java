@@ -3,12 +3,6 @@ package com.ecoparque.activites;
 import android.app.Activity;
 import android.app.DialogFragment;
 import android.content.Intent;
-import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -17,145 +11,73 @@ import android.widget.EditText;
 import com.ecoparque.R;
 import com.ecoparque.fragments.DesconectarFragment;
 
+import org.androidannotations.annotations.AfterTextChange;
+import org.androidannotations.annotations.AfterViews;
+import org.androidannotations.annotations.CheckedChange;
+import org.androidannotations.annotations.Click;
+import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.OptionsItem;
+import org.androidannotations.annotations.OptionsMenu;
+import org.androidannotations.annotations.ViewById;
+
+@EActivity(R.layout.depositante)
+@OptionsMenu(R.menu.depositante)
 public class Depositante extends Activity {
 
-    private EditText ident, peso;
-    private Button btnDep;
-    private String from;
-    private CheckBox material, aceites, neveras;
+    @ViewById(R.id.dep_ident)
+    EditText ident;
+    @ViewById(R.id.text_peso)
+    EditText peso;
+    @ViewById(R.id.depositar)
+    Button btnDep;
+    @ViewById(R.id.dep_chk_matInf)
+    CheckBox material;
+    @ViewById(R.id.dep_chk_aceites)
+    CheckBox aceites;
+    @ViewById(R.id.dep_chk_nev)
+    CheckBox neveras;
+    private Intent prevIntent;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.fragment_depositante);
-
-        Intent intent = getIntent();
-        String message = intent.getStringExtra(SeleccionUsuario.EXTRA_MESSAGE);
-        from = intent.getStringExtra("from");
-        ident = (EditText) findViewById(R.id.dep_ident);
-        ident.setText(message);
-
-
-        peso = (EditText) findViewById(R.id.text_peso);
-        btnDep = (Button) findViewById(R.id.depositar);
-
-        btnDep.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(Depositante.this, Resultados.class);
-                intent.putExtra(SeleccionUsuario.EXTRA_MESSAGE, ident.getText().toString());
-                if (material.isChecked())
-                    intent.putExtra("matInf", "true");
-                else
-                    intent.putExtra("matInf", "false");
-                if (neveras.isChecked())
-                    intent.putExtra("neveras", "true");
-                else
-                    intent.putExtra("neveras", "false");
-
-                if (aceites.isChecked())
-                    intent.putExtra("aceites", "true");
-                else
-                    intent.putExtra("aceites", "false");
-                intent.putExtra("peso", peso.getText().toString());
-                intent.putExtra("from", from);
-                startActivity(intent);
-            }
-        });
-
-        material = (CheckBox) findViewById(R.id.dep_chk_matInf);
-        aceites = (CheckBox) findViewById(R.id.dep_chk_aceites);
-        neveras = (CheckBox) findViewById(R.id.dep_chk_nev);
-
-        peso.addTextChangedListener(mTextEditorWatcher);
-        material.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    peso.setEnabled(true);
-
-                } else if (!aceites.isChecked() && !neveras.isChecked()) {
-                    btnDep.setEnabled(false);
-                    peso.setText("");
-                    peso.setEnabled(false);
-                }
-
-            }
-        });
-
-        aceites.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-
-                    peso.setEnabled(true);
-                } else if (!material.isChecked() && !neveras.isChecked()) {
-                    btnDep.setEnabled(false);
-                    peso.setText("");
-                    peso.setEnabled(false);
-                }
-            }
-        });
-
-        neveras.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-
-                    peso.setEnabled(true);
-                } else if (!aceites.isChecked() && !material.isChecked()) {
-                    btnDep.setEnabled(false);
-                    peso.setText("");
-                    peso.setEnabled(false);
-                }
-            }
-        });
-
+    @AfterViews
+    void initList() {
+        prevIntent = getIntent();
+        ident.setText(prevIntent.getStringExtra(SeleccionUsuario.EXTRA_MESSAGE));
     }
 
+    @Click(R.id.depositar)
+    void depositarContenido() {
+        Intent intent = new Intent(Depositante.this, Resultados_.class);
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.depositante, menu);
-        return true;
+        intent.putExtra(SeleccionUsuario.EXTRA_MESSAGE, ident.getText().toString());
+        intent.putExtra("matInf", material.isChecked());
+        intent.putExtra("neveras", neveras.isChecked());
+        intent.putExtra("aceites", aceites.isChecked());
+        intent.putExtra("peso", peso.getText().toString());
+        intent.putExtra("from", prevIntent.getStringExtra("from"));
+
+        startActivity(intent);
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            DialogFragment newFragment = new DesconectarFragment();
-            newFragment.show(getFragmentManager(), "dialogo");
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
+    @AfterTextChange(R.id.text_peso)
+    void afterTextChangedOnPassword() {
+        btnDep.setEnabled(!peso.getText().toString().isEmpty());
     }
 
-    private final TextWatcher mTextEditorWatcher = new TextWatcher() {
+    @CheckedChange({R.id.dep_chk_matInf, R.id.dep_chk_aceites, R.id.dep_chk_nev})
+    void checkedChangeOnMaterialCheckBox(CompoundButton botMatInf, boolean isChecked) {
+        if (isChecked) {
+            peso.setEnabled(true);
 
-
-        @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
+        } else if (!aceites.isChecked() && !neveras.isChecked() && !material.isChecked()) {
+            btnDep.setEnabled(false);
+            peso.setText("");
+            peso.setEnabled(false);
         }
+    }
 
-        public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-        }
-
-        public void afterTextChanged(Editable s) {
-
-            if (!peso.getText().toString().isEmpty())
-                btnDep.setEnabled(true);
-            else
-                btnDep.setEnabled(false);
-        }
-
-
-    };
-
-
+    @OptionsItem(R.id.action_settings)
+    void myMethod() {
+        DialogFragment newFragment = new DesconectarFragment();
+        newFragment.show(getFragmentManager(), "dialogo");
+    }
 }

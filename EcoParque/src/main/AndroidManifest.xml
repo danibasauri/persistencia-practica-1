@@ -20,13 +20,13 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application
-        android:name="com.ecoparque.objects.Constantes"
+        android:name="com.ecoparque.objects.Constantes_"
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/Theme.NoBackground">
         <activity
-            android:name="com.ecoparque.activites.LoginActivity"
+            android:name="com.ecoparque.activites.LoginActivity_"
             android:label="@string/app_title"
             android:noHistory="true"
             android:theme="@style/Theme"
@@ -37,47 +37,47 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.ecoparque.activites.SeleccionUsuario"
+            android:name="com.ecoparque.activites.SeleccionUsuario_"
             android:label="@string/title_activity_seleccion_usuario" />
         <activity
-            android:name="com.ecoparque.activites.DatosEmpresa"
+            android:name="com.ecoparque.activites.DatosEmpresa_"
             android:label="@string/title_activity_datos_empresa"
-            android:parentActivityName="com.ecoparque.SeleccionUsuario">
+            android:parentActivityName="com.ecoparque.SeleccionUsuario_">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.ecoparque.SeleccionUsuario" />
+                android:value="com.ecoparque.SeleccionUsuario_" />
         </activity>
         <activity
-            android:name="com.ecoparque.activites.Depositante"
+            android:name="com.ecoparque.activites.Depositante_"
             android:label="@string/title_activity_depositante"
-            android:parentActivityName="com.ecoparque.SeleccionUsuario">
+            android:parentActivityName="com.ecoparque.SeleccionUsuario_">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.ecoparque.SeleccionUsuario" />
+                android:value="com.ecoparque.SeleccionUsuario_" />
         </activity>
         <activity
-            android:name="com.ecoparque.activites.Resultados"
+            android:name="com.ecoparque.activites.Resultados_"
             android:label="@string/title_activity_resultados"
-            android:parentActivityName="com.ecoparque.Depositante">
+            android:parentActivityName="com.ecoparque.Depositante_">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.ecoparque.Depositante" />
         </activity>
         <activity
-            android:name="com.ecoparque.activites.DatosDominio"
+            android:name="com.ecoparque.activites.DatosDominio_"
             android:label="@string/title_activity_datos_dominio"
-            android:parentActivityName="com.ecoparque.DatosEmpresa">
+            android:parentActivityName="com.ecoparque.DatosEmpresa_">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.ecoparque.DatosEmpresa" />
+                android:value="com.ecoparque.DatosEmpresa_" />
         </activity>
         <activity
-            android:name="com.ecoparque.activites.SeleccionPuntoLimpio"
+            android:name="com.ecoparque.activites.SeleccionPuntoLimpio_"
             android:label="@string/title_activity_seleccion_punto_limpio"
-            android:parentActivityName="com.ecoparque.LoginActivity">
+            android:parentActivityName="com.ecoparque.LoginActivity_">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.ecoparque.LoginActivity" />
+                android:value="com.ecoparque.LoginActivity_" />
         </activity>
         <activity
             android:name="com.ecoparque.activites.MapaDominio"
